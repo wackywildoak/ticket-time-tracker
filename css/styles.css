@@ -19,8 +19,8 @@ p{
 .main-content__wrapper {
     margin: 0 !important;
     background: url("/img/background.png");
-    height: 300px;
-    width: 600px;
+    height: 200px;
+    width: 400px;
 }
 
 header{

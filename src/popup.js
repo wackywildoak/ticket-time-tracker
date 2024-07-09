@@ -1,17 +1,19 @@
-// popup.js
-  chrome.runtime.sendMessage({action: 'getLastMessage'}, function(response) {
-    if (response && response.newText) {
-      document.getElementById('textToChange').textContent = response.newText;
-    }
-  });
+function formatTime(totalSeconds) {
+  let hours = Math.floor(totalSeconds / 3600);
+  let minutes = Math.floor((totalSeconds % 3600) / 60);
+  let seconds = Math.floor(totalSeconds % 60);
 
-  chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    console.log('Message received in popup.js:', message);
-    if (message.action === 'updatePopupText') {
-      const textElement = document.getElementById('textToChange');
-      if (textElement) {
-        textElement.textContent = message.newText;
-      }
-    }
-  });
+  hours = String(hours).padStart(2, '0');
+  minutes = String(minutes).padStart(2, '0');
+  seconds = String(seconds).padStart(2, '0');
 
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  chrome.storage.sync.get(['totalTime'], function(result) {
+      let totalTime = result.totalTime || 0;
+      let formattedTime = formatTime(totalTime);
+      document.querySelector('.block-time-content p').textContent = formattedTime;
+  });
+});

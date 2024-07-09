@@ -5,16 +5,16 @@
   "description": "Tracks time when the timer button is clicked",
   "permissions": ["activeTab", "storage"],
   "background": {
-    "service_worker": "src/background.js"
+    "service_worker": "/src/background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["src/content.js"]
+      "js": ["/src/content.js"]
     }
   ],
   "action": {
-    "default_popup": "html/popup.html",
+    "default_popup": "/html/popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
