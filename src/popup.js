@@ -10,10 +10,32 @@ function formatTime(totalSeconds) {
   return `${hours}:${minutes}:${seconds}`;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  chrome.storage.sync.get(['totalTime'], function(result) {
+function calculateEarnings(totalSeconds) {
+  // Конвертируем время в часах в рубли по тарифу 600 рублей в час
+  let hours = totalSeconds / 3600;
+  let earnings = hours * 600;
+  return earnings.toFixed(2); // Округляем до двух знаков после запятой
+}
+
+function updateTimer() {
+  chrome.storage.sync.get(['startTime', 'totalTime'], function(result) {
+      let startTime = result.startTime;
       let totalTime = result.totalTime || 0;
+
+      if (startTime) {
+          let currentTime = new Date().getTime();
+          let elapsedTime = (currentTime - startTime) / 1000; // в секундах
+          totalTime += elapsedTime;
+      }
+
       let formattedTime = formatTime(totalTime);
+      let earnings = calculateEarnings(totalTime);
+
       document.querySelector('.block-time-content p').textContent = formattedTime;
+      document.querySelector('.earnings-content p').textContent = `${earnings} рублей`;
   });
-});
+}
+
+updateTimer(); // Вызов функции без обертки в DOMContentLoaded
+
+setInterval(updateTimer, 1000); // Обновляем таймер каждую секунду
