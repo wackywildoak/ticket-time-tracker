@@ -1,0 +1,93 @@
+@font-face {
+    font-family: "Moscow2024";
+    src: url("/fonts/MOSCOW2024.otf");
+}
+
+@font-face {
+    font-family: "Kubiki";
+    src: url("/fonts/minecraft.ttf");
+}
+
+p{
+    font-family: "Kubiki";
+}
+
+.body {
+    font-family: "Kubiki";
+    padding: 0;
+}
+.main-content__wrapper {
+    margin: 0 !important;
+    background: url("/img/background.png");
+    height: 300px;
+    width: 600px;
+}
+
+header{
+    display: flex;
+    justify-content: center;
+    margin-top: 7px;
+}
+
+.header-text{
+    background-color: rgba(0, 0, 0, 0.281);
+    width: 70%;
+    display: flex;
+    justify-content: center;
+}
+
+.header-text p{
+    color: #fff;
+    font-size: 18px;
+}
+
+main{
+    display: block;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.281);
+}
+
+.block-time-header{
+    display: flex;
+    justify-content: center;
+}
+
+.block-time p{
+    color: #fff;
+    font-size: 15px;
+}
+
+.block-time-content{
+    display: flex;
+    justify-content: center;
+}
+
+.block-time-content p{
+    font-family: "Moscow2024";
+    font-size: 20px;
+    margin-top: 0px;
+}
+
+.block-btns{
+    display: flex;
+    justify-content: center;
+    
+}
+
+.button{
+    display: flex;
+    justify-content: center;
+    background: no-repeat url("img/button.png");
+    background-size: 100% 100%;
+    background-position: center;
+
+    cursor: pointer;
+
+}
+
+.button p{
+    padding: 15px 30px;
+    margin: 0px;
+    color: #fff;
+    font-size: 20px;
+}
