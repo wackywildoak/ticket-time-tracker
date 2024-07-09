@@ -77,7 +77,7 @@ main{
 .button{
     display: flex;
     justify-content: center;
-    background: no-repeat url("img/button.png");
+    background: no-repeat url("/img/button.png");
     background-size: 100% 100%;
     background-position: center;
 

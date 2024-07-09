@@ -10,6 +10,22 @@ function formatTime(totalSeconds) {
   return `${hours}:${minutes}:${seconds}`;
 }
 
+function clearTimer() {
+  chrome.storage.sync.remove(['startTime', 'totalTime'], () => {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+    } else {
+      console.log('Specified keys cleared from chrome.storage.sync');
+    }
+  });
+}
+
+// Вы можете вызвать эту функцию, например, по нажатию кнопки в popup
+document.getElementById('clear-storage').addEventListener('click', () => {
+  clearTimer()
+});
+
+
 function calculateEarnings(totalSeconds) {
   // Конвертируем время в часах в рубли по тарифу 600 рублей в час
   let hours = totalSeconds / 3600;
