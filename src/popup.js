@@ -63,7 +63,8 @@ function addTime(addTotalTime){
         return chrome.storage.sync.set({ totalTime: addTotalTime }); // сохраняем в памяти браузера
 
     } else {
-        console.log('0.');
+        addTotalTime *= 60;
+        return chrome.storage.sync.set({ totalTime: addTotalTime });
     }
   });
 }
