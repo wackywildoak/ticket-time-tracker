@@ -52,6 +52,24 @@ function updateTimer() {
   });
 }
 
+function addTime(addTotalTime){
+  chrome.storage.sync.get(['totalTime'], function(result) {
+    let totalTime = result.totalTime;
+
+    if (totalTime) {
+        console.log(totalTime);
+        addTotalTime *= 60;
+        addTotalTime += result.totalTime;
+        return chrome.storage.sync.set({ totalTime: addTotalTime }); // сохраняем в памяти браузера
+
+    } else {
+        console.log('0.');
+    }
+  });
+}
+
+
+
 updateTimer(); // Вызов функции без обертки в DOMContentLoaded
 
 setInterval(updateTimer, 1000); // Обновляем таймер каждую секунду
