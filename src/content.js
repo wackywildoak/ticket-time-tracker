@@ -1,48 +1,92 @@
+function formatTime(totalSeconds) {
+	let hours = Math.floor(totalSeconds / 3600);
+	let minutes = Math.floor((totalSeconds % 3600) / 60);
+	let seconds = Math.floor(totalSeconds % 60);
+
+	hours = String(hours).padStart(2, '0');
+	minutes = String(minutes).padStart(2, '0');
+	seconds = String(seconds).padStart(2, '0');
+
+	return `${hours}:${minutes}:${seconds}`;
+}
+
+function calculateEarnings(totalSeconds) {
+	// Конвертируем время в часах в рубли по тарифу 600 рублей в час
+	let hours = totalSeconds / 3600;
+	let earnings = hours * 600;
+	return earnings.toFixed(0); // Округляем до двух знаков после запятой
+}
+
+function updateTimer() { // обновляем данные в виджете 
+	chrome.storage.sync.get(['startTime', 'totalTime'], function (result) {
+		let startTime = result.startTime;
+		let totalTime = result.totalTime || 0;
+
+		if (startTime) {
+			let currentTime = new Date().getTime();
+			let elapsedTime = (currentTime - startTime) / 1000; // в секундах
+			totalTime += elapsedTime;
+		}
+
+		let formattedTime = formatTime(totalTime);
+		let earnings = calculateEarnings(totalTime);
+
+		document.querySelector('.block-time-content p').textContent = formattedTime;
+		document.querySelector('.earnings-content p').textContent = `${earnings} рублей`;
+	});
+}
+
+updateTimer(); // Вызов функции без обертки в DOMContentLoaded
+
+setInterval(updateTimer, 1000); // Обновляем таймер каждую секунду
+
 function startTimer() { // стартуем таймер
-    let startTime = new Date().getTime(); // получаем начало таймера
-    console.log('Таймер запущен:', startTime);
-    chrome.storage.sync.set({ startTime: startTime }); // сохраняем в памяти браузера
+	let startTime = new Date().getTime(); // получаем начало таймера
+	console.log('Таймер запущен:', startTime);
+	chrome.storage.sync.set({ startTime: startTime }); // сохраняем в памяти браузера
 }
 
 function stopTimer() { // остановили таймер
-    chrome.storage.sync.get(['startTime'], function(result) {
-        let startTime = result.startTime;
-        if (startTime) {
-            let endTime = new Date().getTime();
-            let elapsedTime = (endTime - startTime) / 1000; // в секундах
+	chrome.storage.sync.get(['startTime'], function (result) {
+		let startTime = result.startTime;
+		if (startTime) {
+			let endTime = new Date().getTime();
+			let elapsedTime = (endTime - startTime) / 1000; // в секундах
 
-            chrome.storage.sync.get(['totalTime'], function(result) {
-                let totalTime = result.totalTime || 0;
-                totalTime += elapsedTime;
+			chrome.storage.sync.get(['totalTime'], function (result) {
+				let totalTime = result.totalTime || 0;
+				totalTime += elapsedTime;
 
-                chrome.storage.sync.set({ 
-                    elapsedTime: elapsedTime,
-                    totalTime: totalTime 
-                }, function() {
-                    console.log('Таймер остановлен:', endTime);
-                    console.log('Прошедшее время в секундах:', elapsedTime);
-                    console.log('Общее время в секундах:', totalTime);
+				chrome.storage.sync.set({
+					elapsedTime: elapsedTime,
+					totalTime: totalTime
+				}, function () {
+					console.log('Таймер остановлен:', endTime);
+					console.log('Прошедшее время в секундах:', elapsedTime);
+					console.log('Общее время в секундах:', totalTime);
 
-                    chrome.storage.sync.remove('startTime'); // удаляем startTime после остановки
-                });
-            });
-        } else {
-            console.log('Таймер не был запущен.');
-        }
-    });
+					chrome.storage.sync.remove('startTime'); // удаляем startTime после остановки
+				});
+			});
+		} else {
+			console.log('Таймер не был запущен.');
+		}
+	});
 }
 
 let timerButton = document.querySelector('div.timer-button-holder');
-
 let timerExists = document.getElementsByClassName('timer')[0];
 
 timerButton.addEventListener("click", function () {
-    if (timerExists.classList.contains('start')) {
-        startTimer();
-    } else {
-        stopTimer();
-    }
+	if (timerExists.classList.contains('start')) {
+		startTimer();
+	} else {
+		stopTimer();
+	}
 });
+
+
+// ----------------------- widget --------------------------
 
 const widgetHtml = `
   <div id="ticket-time-tracker-widget" class="main-content__widget">
@@ -57,11 +101,6 @@ const widgetHtml = `
     <button id="close-widget">✖</button>
   </div>
 `;
-
-const widgetContainer = document.createElement('div');
-widgetContainer.innerHTML = widgetHtml;
-document.body.appendChild(widgetContainer);
-
 // Добавим стили для виджета
 const widgetStyles = `
   .main-content__widget {
@@ -74,6 +113,9 @@ const widgetStyles = `
     z-index: 10000;
     padding-top: 20px;
     color: black;
+	 border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
   }
   #close-widget {
     position: absolute;
@@ -95,54 +137,15 @@ const widgetStyles = `
   }
 `;
 
+const widgetContainer = document.createElement('div');
+widgetContainer.innerHTML = widgetHtml;
+document.body.appendChild(widgetContainer);
+
 const styleSheet = document.createElement("style");
 styleSheet.type = "text/css";
 styleSheet.innerText = widgetStyles;
 document.head.appendChild(styleSheet);
 
 document.getElementById('close-widget').addEventListener('click', () => {
-  document.getElementById('ticket-time-tracker-widget').style.display = 'none';
+	document.getElementById('ticket-time-tracker-widget').style.display = 'none';
 });
-
-function formatTime(totalSeconds) {
-    let hours = Math.floor(totalSeconds / 3600);
-    let minutes = Math.floor((totalSeconds % 3600) / 60);
-    let seconds = Math.floor(totalSeconds % 60);
-  
-    hours = String(hours).padStart(2, '0');
-    minutes = String(minutes).padStart(2, '0');
-    seconds = String(seconds).padStart(2, '0');
-  
-    return `${hours}:${minutes}:${seconds}`;
-  }
-  
-  function calculateEarnings(totalSeconds) {
-    // Конвертируем время в часах в рубли по тарифу 600 рублей в час
-    let hours = totalSeconds / 3600;
-    let earnings = hours * 600;
-    return earnings.toFixed(0); // Округляем до двух знаков после запятой
-  }
-  
-  function updateTimer() { // обновляем данные в виджете 
-    chrome.storage.sync.get(['startTime', 'totalTime'], function(result) {
-        let startTime = result.startTime;
-        let totalTime = result.totalTime || 0;
-  
-        if (startTime) {
-            let currentTime = new Date().getTime();
-            let elapsedTime = (currentTime - startTime) / 1000; // в секундах
-            totalTime += elapsedTime;
-        }
-  
-        let formattedTime = formatTime(totalTime);
-        let earnings = calculateEarnings(totalTime);
-  
-        document.querySelector('.block-time-content p').textContent = formattedTime;
-        document.querySelector('.earnings-content p').textContent = `${earnings} рублей`;
-    });
-  }
-  
-  updateTimer(); // Вызов функции без обертки в DOMContentLoaded
-  
-  setInterval(updateTimer, 1000); // Обновляем таймер каждую секунду
-  
