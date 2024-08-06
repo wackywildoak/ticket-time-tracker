@@ -10,28 +10,21 @@ function formatTime(totalSeconds) {
 	return `${hours}:${minutes}:${seconds}`;
 }
 
-function clearTimer() {
-	chrome.storage.sync.remove(['startTime', 'totalTime'], () => {
-		if (chrome.runtime.lastError) {
-			console.error(chrome.runtime.lastError);
-		} else {
-			console.log('Specified keys cleared from chrome.storage.sync');
-		}
-	});
-}
-
-function calculateEarnings(totalSeconds) {
+function calculateEarnings(totalSeconds, salary, coefficient) {
 	// Конвертируем время в часах в рубли по тарифу 600 рублей в час
-	let salary = 13050; // оклад
+	// let salary = 13050; // оклад
 	let hours = totalSeconds / 3600;
-	let earnings = hours * 600 + salary;
+	let earnings = hours * (600 * coefficient) + salary;
 	return earnings.toFixed(2); // Округляем до двух знаков после запятой
 }
 
 function updateTimer() {
-	chrome.storage.sync.get(['startTime', 'totalTime'], function (result) {
+	chrome.storage.sync.get(['startTime', 'totalTime', 'salary', 'coefficient'], function (result) {
 		let startTime = result.startTime;
 		let totalTime = result.totalTime || 0;
+		let salary = result.salary || 0;
+		let coefficient = result.coefficient || 1;
+
 
 		if (startTime) {
 			let currentTime = new Date().getTime();
@@ -40,7 +33,7 @@ function updateTimer() {
 		}
 
 		let formattedTime = formatTime(totalTime);
-		let earnings = calculateEarnings(totalTime);
+		let earnings = calculateEarnings(totalTime, salary, coefficient);
 
 		document.querySelector('.block-time-content p').textContent = formattedTime;
 		document.querySelector('.earnings-content p').textContent = `${earnings} рублей`;
@@ -64,9 +57,33 @@ function addTime(addTotalTime) {
 	});
 }
 
+function setSalary (addSalary) {
+	chrome.storage.sync.get(['salary'], function(result) {
+		return chrome.storage.sync.set({ salary: addSalary });
+	});
+}
+
+function setCoef (coefficient) {
+	chrome.storage.sync.get(['coefficient'], function(result) {
+		return chrome.storage.sync.set({ coefficient: coefficient });
+	});
+}
+
+function clearTimer() {
+	chrome.storage.sync.remove(['startTime', 'totalTime'], () => {
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError);
+		} else {
+			console.log('Specified keys cleared from chrome.storage.sync');
+		}
+	});
+}
+
 const customFunctions = {
 	addTime: addTime,
-	clearTimer: clearTimer,
+	setClear: clearTimer,
+	setSalary: setSalary,
+	setCoef: setCoef,
 };
 
 const inputField = document.getElementById('inputField');
