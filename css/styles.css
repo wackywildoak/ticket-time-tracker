@@ -71,6 +71,7 @@ main{
 .block-btns{
     display: flex;
     justify-content: center;
+    margin-bottom: 15px;
     
 }
 
@@ -91,3 +92,42 @@ main{
     color: #fff;
     font-size: 20px;
 }
+
+.minecraft-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px
+}
+
+.minecraft-input {
+    font-family: "Kubiki";
+    background: #000000; /* Green color similar to Minecraft grass */
+    border: 3px solid #ffffff; /* Black border to resemble pixel art */
+    font-size: 16px; /* Adjust font size as needed */
+    color: #FFFFFF; /* White text color */
+    padding: 10px;
+    outline: none;
+    box-shadow: 0 0 10px #000000; /* Subtle shadow for depth */
+    border-radius: 1px; /* Rounded corners to resemble blocky style */
+    text-align: center;
+}
+
+.minecraft-input::placeholder {
+    color: #AAAAAA; /* Grey placeholder color */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .minecraft-input {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+.book-commads li {
+    color: #fff;
+    font-family: "Kubiki";
+
+}
+

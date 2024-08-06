@@ -20,12 +20,6 @@ function clearTimer() {
 	});
 }
 
-// Вы можете вызвать эту функцию, например, по нажатию кнопки в popup
-document.getElementById('clear-storage').addEventListener('click', () => {
-	clearTimer()
-});
-
-
 function calculateEarnings(totalSeconds) {
 	// Конвертируем время в часах в рубли по тарифу 600 рублей в час
 	let salary = 13050; // оклад
@@ -70,10 +64,40 @@ function addTime(addTotalTime) {
 	});
 }
 
-const saveButton = document.getElementById('saveButton');
-saveButton.addEventListener('click', function () {
-	const inputField = document.getElementById('inputField');
-	addTime(inputField.value);
+const customFunctions = {
+	addTime: addTime,
+	clearTimer: clearTimer,
+};
+
+const inputField = document.getElementById('inputField');
+
+inputField.addEventListener('keydown', (event) => {
+	if (event.key == 'Enter') {
+		const input = event.target.value.trim();
+		console.clear();
+
+		const commands = input.split('/');
+		commands.forEach(command => {
+			if (command) {
+				const [funcName, ...args] = command.trim().split(' ');
+
+				if (funcName in customFunctions) {
+					const result = customFunctions[funcName](...args.map(arg => parseFloat(arg)));
+				}
+			}
+		});
+
+		event.target.value = '';
+	}
+});
+let bookButton = document.getElementById('book');
+bookButton.addEventListener('click', function () {
+	let bookWrapper = document.getElementsByClassName('book-wrapper')[0];
+	if (bookWrapper.style.display == "none") {
+		bookWrapper.style.display = "block";
+	} else {
+		bookWrapper.style.display = "none";
+	}
 });
 
 updateTimer(); // Вызов функции без обертки в DOMContentLoaded

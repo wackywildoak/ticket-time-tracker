@@ -11,8 +11,16 @@
 	<main>
 		<div class="block-time">
 
-			<div class="block-time-header">
-				<p id="textToChange">Затраченное время:</p>
+			<div class="block-time-header" style="width: 100%; justify-content: flex-start;">
+				<button id="book" style="background: none; border: none; float: right; cursor: pointer;">
+					<img src="/img/book.png" alt="" style="width: 50px;">
+				</button>
+				<div class="book-wrapper" style="display: none;">
+					<ul class="book-commads">
+						<li>addTime - добавить время</li>
+						<li>clearTimer - очистить время</li>
+					</ul>
+				</div>
 			</div>
 
 			<div class="block-time-content">
@@ -23,17 +31,8 @@
 				<p>00:00:00</p>
 			</div>
 
-			<div class="block-btns">
-				<a id="clear-storage" class="button">
-					<p>Новый мир</p>
-				</a>
-			</div>
-
-			<input type="text" id="inputField" placeholder="Enter something">
-			<div class="block-btns">
-				<a id="saveButton" class="button">
-					<p>Добавить время</p>
-				</a>
+			<div class="minecraft-container">
+				<input id="inputField" type="text" class="minecraft-input" placeholder="Ввести команду">
 			</div>
 		</div> 
 	</main>
