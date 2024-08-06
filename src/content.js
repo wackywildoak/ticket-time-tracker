@@ -12,8 +12,9 @@ function formatTime(totalSeconds) {
 
 function calculateEarnings(totalSeconds) {
 	// Конвертируем время в часах в рубли по тарифу 600 рублей в час
+	let salary = 13050; // оклад
 	let hours = totalSeconds / 3600;
-	let earnings = hours * 600;
+	let earnings = hours * 600 + salary;
 	return earnings.toFixed(0); // Округляем до двух знаков после запятой
 }
 
