@@ -20,11 +20,11 @@ function calculateEarnings(totalSeconds, salary, coefficient, rate) {
 
 function updateTimer() {
 	chrome.storage.sync.get(['startTime', 'totalTime', 'salary', 'coefficient', 'rate'], function (result) {
-		let startTime = result.startTime;
-		let totalTime = result.totalTime || 0;
-		let salary = result.salary || 0;
-		let coefficient = result.coefficient || 1;
-		let rate = result.rate || 0;
+		let startTime = result.startTime; // время начала таймера
+		let totalTime = result.totalTime || 0; // всё затраченное время
+		let salary = result.salary || 0; // оклад
+		let coefficient = result.coefficient || 1; // коэффицент
+		let rate = result.rate || 0; // ставка в час
 
 
 		if (startTime) {
