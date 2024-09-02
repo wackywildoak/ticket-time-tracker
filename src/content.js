@@ -10,20 +10,21 @@ function formatTime(totalSeconds) {
 	return `${hours}:${minutes}:${seconds}`;
 }
 
-function calculateEarnings(totalSeconds, salary, coefficient) {
+function calculateEarnings(totalSeconds, salary, coefficient, rate) {
 	// Конвертируем время в часах в рубли по тарифу 600 рублей в час
 	// let salary = 13050;
 	let hours = totalSeconds / 3600;
-	let earnings = hours * (600 * coefficient) + salary;
+	let earnings = hours * (rate * coefficient) + salary;
 	return earnings.toFixed(0); // Округляем до двух знаков после запятой
 }
 
 function updateTimer() { // обновляем данные в виджете 
-	chrome.storage.sync.get(['startTime', 'totalTime', 'salary', 'coefficient'], function (result) {
+	chrome.storage.sync.get(['startTime', 'totalTime', 'salary', 'coefficient', 'rate'], function (result) {
 		let startTime = result.startTime;
 		let totalTime = result.totalTime || 0;
 		let salary = result.salary || 0;
 		let coefficient = result.coefficient || 1;
+		let rate = result.rate || 0; // ставка в час
 
 		if (startTime) {
 			let currentTime = new Date().getTime();
@@ -32,7 +33,7 @@ function updateTimer() { // обновляем данные в виджете
 		}
 
 		let formattedTime = formatTime(totalTime);
-		let earnings = calculateEarnings(totalTime, salary, coefficient);
+		let earnings = calculateEarnings(totalTime, salary, coefficient, rate);
 
 		document.querySelector('.block-time-content p').textContent = formattedTime;
 		document.querySelector('.earnings-content p').textContent = `${earnings} рублей`;
